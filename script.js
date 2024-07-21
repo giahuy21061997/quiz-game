@@ -1,6 +1,6 @@
 const startButton = document.getElementById('start-btn')
 const nextButton = document.getElementById('next-btn')
-const submitButton = document.getElementById('submit-btn')
+const backButton = document.getElementById('back-btn')
 const questionContainerElement = document.getElementById('question-container')
 const resultContainerElement = document.getElementById('result-container')
 const questionElement = document.getElementById('question')
@@ -68,6 +68,7 @@ nextButton.addEventListener('click', () => {
     currentQuestionIndex++
     setNextQuestion()
 })
+backButton.addEventListener('click', goBackToStart)
 
 function startGame() {
     startButton.classList.add('hide')
@@ -102,7 +103,7 @@ function resetState() {
         answerButtonsElement.removeChild(answerButtonsElement.firstChild)
     }
     nextButton.classList.add('hide')
-    submitButton.classList.add('hide')
+    backButton.classList.add('hide')
 }
 
 function selectAnswer(e) {
@@ -125,11 +126,11 @@ function selectAnswer(e) {
     if (currentQuestionIndex + 1 < questions.length) {
         nextButton.classList.remove('hide')
     } else {
-        submitButton.classList.remove('hide')
+        nextButton.classList.add('hide')
+        backButton.classList.remove('hide')
+        showResult()
     }
 }
-
-submitButton.addEventListener('click', showResult)
 
 function showResult() {
     questionContainerElement.classList.add('hide')
@@ -146,3 +147,9 @@ function showResult() {
     }
     resultElement.innerText = resultText
 }
+
+function goBackToStart() {
+    resultContainerElement.classList.add('hide')
+    backButton.classList.add('hide')
+    startButton.classList.remove('hide')
+} 
