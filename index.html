@@ -7,26 +7,30 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div class="container">
-        <h1>KHÁM PHÁ CHÂN DUNG TÀI CHÍNH CÁ NHÂN</h1>
-        <div id="quiz-container">
-            <div id="question-container" class="hide">
-                <div id="question">Câu hỏi</div>
-                <div id="answer-buttons" class="btn-grid">
-                    <!-- Các nút câu trả lời sẽ được thêm vào bằng JavaScript -->
-                </div>
-            </div>
-            <div class="controls">
-                <button id="start-btn" class="start-btn btn">Bắt đầu trò chơi</button>
-                <button id="next-btn" class="next-btn btn hide">Câu hỏi tiếp theo</button>
-                <button id="back-btn" class="back-btn btn hide">Quay lại màn hình chính</button>
-            </div>
-            <div id="result-container" class="hide">
-                <h2>Kết quả</h2>
-                <div id="result"></div>
-            </div>
+    <div class="start-screen" id="start-screen">
+        <img src="main.png" alt="Start Screen" class="full-screen-image">
+        <div class="overlay">
+            <button id="start-btn" class="start-btn btn">Bắt đầu</button>
         </div>
     </div>
+    
+    <div class="container hide" id="quiz-container">
+        <img src="bg.jpg" alt="Background Image" class="background-image">
+        <div class="question-section">
+            <h3 id="question">Câu hỏi</h3>
+            <div class="answer-buttons" id="answer-buttons">
+                <!-- Các nút câu trả lời sẽ được thêm vào bằng JavaScript -->
+            </div>
+            
+        </div>
+        <button id="next-btn" class="next-btn btn">CÂU HỎI TIẾP THEO</button>
+    </div>
+    
+    <div id="result-container" class="hide">
+        <img src="" alt="Result Screen" class="full-screen-image" id="result-img">
+        <button id="back-btn" class="back-btn btn">Quay lại màn hình chính</button>
+    </div>
+    
     <script src="script.js"></script>
 </body>
 </html>

@@ -1,16 +1,17 @@
-const startButton = document.getElementById('start-btn')
-const nextButton = document.getElementById('next-btn')
-const backButton = document.getElementById('back-btn')
-const questionContainerElement = document.getElementById('question-container')
-const resultContainerElement = document.getElementById('result-container')
-const questionElement = document.getElementById('question')
-const answerButtonsElement = document.getElementById('answer-buttons')
-const resultElement = document.getElementById('result')
+const startButton = document.getElementById('start-btn');
+const nextButton = document.getElementById('next-btn');
+const backButton = document.getElementById('back-btn');
+const startScreen = document.getElementById('start-screen');
+const quizContainer = document.getElementById('quiz-container');
+const questionContainerElement = document.getElementById('question');
+const answerButtonsElement = document.getElementById('answer-buttons');
+const resultContainerElement = document.getElementById('result-container');
+const resultImg = document.getElementById('result-img');
 
-let currentQuestionIndex = 0
-let scoreA = 0
-let scoreB = 0
-let scoreC = 0
+let currentQuestionIndex = 0;
+let scoreA = 0;
+let scoreB = 0;
+let scoreC = 0;
 
 const questions = [
     {
@@ -18,13 +19,13 @@ const questions = [
         answers: {
             a: "Có, tôi luôn lập kế hoạch, phân chia các khoản chi phí cần sử dụng và tuân theo nó.",
             b: "Thỉnh thoảng, nếu tôi có kế hoạch chi tiêu lớn.",
-            c: "Không, tôi sẽ sử dụng tuỳ vào nhu cầu cá nhân."
+            c: "Không, tôi sẽ sử dụng tùy vào nhu cầu cá nhân."
         }
     },
     {
         question: "Khi có một khoản tiền lớn bất ngờ, bạn sẽ làm gì đầu tiên?",
         answers: {
-            a: "Đưa vào quỹ tiết kiệm hoặc đầu tư cho một quỹ nào đó (vàng, đất…).",
+            a: "Đưa vào quỹ tiết kiệm hoặc đầu tư cho một quỹ nào đó (vàng, đất...).",
             b: "Dùng để đi du lịch hoặc mua sắm cho bản thân.",
             c: "Đăng ký khóa học hoặc mua sách, tài liệu để học tập."
         }
@@ -61,95 +62,87 @@ const questions = [
             c: "Không thường xuyên, tôi tập trung vào những chi tiêu liên quan đến học tập và phát triển."
         }
     }
-]
+];
 
-startButton.addEventListener('click', startGame)
+startButton.addEventListener('click', startGame);
 nextButton.addEventListener('click', () => {
-    currentQuestionIndex++
-    setNextQuestion()
-})
-backButton.addEventListener('click', goBackToStart)
+    currentQuestionIndex++;
+    if (currentQuestionIndex < questions.length) {
+        setNextQuestion();
+    } else {
+        showResults();
+    }
+});
+backButton.addEventListener('click', goBackToStart);
 
 function startGame() {
-    startButton.classList.add('hide')
-    currentQuestionIndex = 0
-    scoreA = 0
-    scoreB = 0
-    scoreC = 0
-    questionContainerElement.classList.remove('hide')
-    nextButton.classList.remove('hide')
-    setNextQuestion()
+    startScreen.classList.add('hide');
+    quizContainer.classList.remove('hide');
+    currentQuestionIndex = 0;
+    scoreA = 0;
+    scoreB = 0;
+    scoreC = 0;
+    setNextQuestion();
 }
 
 function setNextQuestion() {
-    resetState()
-    showQuestion(questions[currentQuestionIndex])
+    resetState();
+    showQuestion(questions[currentQuestionIndex]);
 }
 
 function showQuestion(question) {
-    questionElement.innerText = `Câu ${currentQuestionIndex + 1}: ${question.question}`
+    questionContainerElement.innerText = question.question;
     Object.keys(question.answers).forEach(key => {
-        const button = document.createElement('button')
-        button.innerText = question.answers[key]
-        button.classList.add('btn')
-        button.addEventListener('click', selectAnswer)
-        button.dataset.value = key
-        answerButtonsElement.appendChild(button)
-    })
+        const button = document.createElement('button');
+        button.innerHTML = `<span>${key.toUpperCase()}</span> ${question.answers[key]}`;
+        button.classList.add('answer-btn');
+        button.addEventListener('click', selectAnswer);
+        button.dataset.value = key;
+        answerButtonsElement.appendChild(button);
+    });
 }
 
 function resetState() {
     while (answerButtonsElement.firstChild) {
-        answerButtonsElement.removeChild(answerButtonsElement.firstChild)
+        answerButtonsElement.removeChild(answerButtonsElement.firstChild);
     }
-    nextButton.classList.add('hide')
-    backButton.classList.add('hide')
+    nextButton.classList.add('hide');
 }
 
 function selectAnswer(e) {
-    const selectedButton = e.target
-    const selectedValue = selectedButton.dataset.value
+    const selectedButton = e.target.closest('button');
+    const selectedValue = selectedButton.dataset.value;
 
-    document.querySelectorAll('.btn').forEach(btn => {
-        btn.classList.remove('selected')
-    })
-    selectedButton.classList.add('selected')
+    document.querySelectorAll('.answer-btn').forEach(btn => {
+        btn.classList.remove('selected');
+    });
+    selectedButton.classList.add('selected');
 
     if (selectedValue === 'a') {
-        scoreA++
+        scoreA++;
     } else if (selectedValue === 'b') {
-        scoreB++
+        scoreB++;
     } else if (selectedValue === 'c') {
-        scoreC++
+        scoreC++;
     }
 
-    if (currentQuestionIndex + 1 < questions.length) {
-        nextButton.classList.remove('hide')
-    } else {
-        nextButton.classList.add('hide')
-        backButton.classList.remove('hide')
-        showResult()
-    }
+    nextButton.classList.remove('hide');
 }
 
-function showResult() {
-    questionContainerElement.classList.add('hide')
-    resultContainerElement.classList.remove('hide')
-    let resultText
-    if (scoreA > scoreB && scoreA > scoreC) {
-        resultText = 'Bạn thuộc dạng chi tiêu có kế hoạch.'
-    } else if (scoreB > scoreA && scoreB > scoreC) {
-        resultText = 'Bạn thuộc dạng chi tiêu theo trải nghiệm.'
-    } else if (scoreC > scoreA && scoreC > scoreB) {
-        resultText = 'Bạn thuộc dạng chi tiêu cho đầu tư và phát triển cá nhân.'
+function showResults() {
+    quizContainer.classList.add('hide');
+    resultContainerElement.classList.remove('hide');
+
+    if (scoreA >= scoreB && scoreA >= scoreC) {
+        resultImg.src = 'hd.png'; // Thay bằng hình ảnh tương ứng với kết quả "Thánh Chi Tiêu"
+    } else if (scoreB >= scoreA && scoreB >= scoreC) {
+        resultImg.src = 'ht.png'; // Thay bằng hình ảnh tương ứng với kết quả "Thánh Hưởng Thụ"
     } else {
-        resultText = 'Bạn có phong cách chi tiêu cân bằng giữa các xu hướng.'
+        resultImg.src = 'tk.png'; // Thay bằng hình ảnh tương ứng với kết quả "Thánh Tiết Kiệm"
     }
-    resultElement.innerText = resultText
 }
 
 function goBackToStart() {
-    resultContainerElement.classList.add('hide')
-    backButton.classList.add('hide')
-    startButton.classList.remove('hide')
-} 
+    resultContainerElement.classList.add('hide');
+    startScreen.classList.remove('hide');
+}
